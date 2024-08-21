@@ -413,6 +413,9 @@ public class StartappAdapter extends Adapter {
                         return;
                     }
 
+                    // context from onSuccess is an Activity, it is used in GAM
+                    interstitial.setContext(context);
+
                     boolean shown = interstitial.showAd(new AdDisplayListener() {
                         @Override
                         public void adHidden(Ad ad1) {
@@ -698,6 +701,9 @@ public class StartappAdapter extends Adapter {
                     if (rewarded == null) {
                         return;
                     }
+
+                    // context from onSuccess is an Activity, it is used in GAM
+                    rewarded.setContext(context);
 
                     boolean shown = rewarded.showAd(new AdDisplayListener() {
                         @Override
