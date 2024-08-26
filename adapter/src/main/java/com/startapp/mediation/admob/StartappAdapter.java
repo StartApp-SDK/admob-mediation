@@ -62,6 +62,7 @@ import com.startapp.sdk.adsbase.model.AdPreferences;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -414,7 +415,7 @@ public class StartappAdapter extends Adapter {
                     }
 
                     // context from onSuccess is an Activity, it is used in GAM
-                    interstitial.setContext(context);
+                    trySetContext(context, interstitial);
 
                     boolean shown = interstitial.showAd(new AdDisplayListener() {
                         @Override
@@ -703,7 +704,7 @@ public class StartappAdapter extends Adapter {
                     }
 
                     // context from onSuccess is an Activity, it is used in GAM
-                    rewarded.setContext(context);
+                    trySetContext(context, rewarded);
 
                     boolean shown = rewarded.showAd(new AdDisplayListener() {
                         @Override
@@ -934,6 +935,17 @@ public class StartappAdapter extends Adapter {
         }
     }
     //endregion
+
+    private static void trySetContext(@NonNull Context context, @NonNull StartAppAd ad) {
+        try {
+            // context from onSuccess is an Activity, it is used in GAM
+            Method method = StartAppAd.class.getDeclaredMethod("setContext", Context.class);
+            method.setAccessible(true);
+            method.invoke(ad, context);
+        } catch (Throwable e) {
+            // do nothing
+        }
+    }
 
     @NonNull
     private static AdError messageToError(@Nullable String message) {
